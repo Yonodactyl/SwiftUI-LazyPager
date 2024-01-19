@@ -211,8 +211,14 @@ class ZoomableView<Element, Content: View>: UIScrollView, UIScrollViewDelegate {
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         
+        #if !os(visionOS)
         let w: CGFloat = view.intrinsicContentSize.width * UIScreen.main.scale
         let h: CGFloat = view.intrinsicContentSize.height * UIScreen.main.scale
+        #else
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        let w: CGFloat = windowScene.coordinateSpace.bounds.width
+        let h: CGFloat = windowScene.coordinateSpace.bounds.height
+        #endif
 
         let ratioW = view.frame.width / w
         let ratioH = view.frame.height / h
